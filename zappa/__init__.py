@@ -8,7 +8,10 @@ def running_in_docker() -> bool:
     - When docker is used allow usage of any python version
     """
     # https://stackoverflow.com/a/20012536/24718
-    cgroup_content = Path("/proc/1/cgroup").read_text()
+    try:
+        cgroup_content = Path("/proc/1/cgroup").read_text()
+    except FileNotFoundError:
+        return False
     in_docker = "/docker/" in cgroup_content or "/lxc/" in cgroup_content
     return in_docker
 
